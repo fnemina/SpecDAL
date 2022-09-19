@@ -1,1 +1,2 @@
 include specdal/gui/*.png
+include specdal/rsr/*.nc
