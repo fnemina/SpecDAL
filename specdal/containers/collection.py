@@ -346,6 +346,14 @@ unpredictable behavior."""
         for spectrum in self.spectra:
             spectrum.derivative()
             
+    ##################################################
+    # wrapper for spectral subset
+    def walevength_range(self, wlmin=350, wlmax=2500, dtype=None):
+        # We iterate over all spectra 
+        for spectra_tmp in self.spectra:
+            spectra_tmp.measurement = spectra_tmp.measurement.loc[wlmin:wlmax]
+            spectra_tmp.metadata['wavelength_range'] = (wlmin, wlmax)
+
 
     ##################################################
     # group operations

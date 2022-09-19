@@ -151,6 +151,13 @@ class Spectrum(numpy.lib.mixins.NDArrayOperatorsMixin):
         self.savgol_polyorder = polyorder
 
     ##################################################
+    # wrapper for spectral subset
+    def walevength_range(self, wlmin=350, wlmax=2500, dtype=None):
+        self.measurement = self.measurement.loc[wlmin:wlmax]
+        self.metadata['wavelength_range'] = (wlmin, wlmax)
+
+
+    ##################################################
     # method for computing the values for a specific satellite
 
     def getRSR(self, satellite="aqua", sensor="modis", rsr_path=__file__.replace("/containers/spectrum.py","/rsr/")):
