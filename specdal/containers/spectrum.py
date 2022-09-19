@@ -41,7 +41,7 @@ class Spectrum(numpy.lib.mixins.NDArrayOperatorsMixin):
     def __init__(self, name=None, filepath=None, measurement=None,
                  measure_type='pct_reflect', metadata=None,
                  interpolated=False, stitched=False, jump_corrected=False,
-                 verbose=False):
+                 verbose=False, reader=None):
         if name is None:
             assert filepath is not None
             name = os.path.splitext(os.path.basename(filepath))[0]
@@ -53,7 +53,7 @@ class Spectrum(numpy.lib.mixins.NDArrayOperatorsMixin):
         self.stitched = stitched
         self.jump_corrected = jump_corrected
         if filepath:
-            self.read(filepath, measure_type, verbose=verbose)
+            self.read(filepath, measure_type, verbose=verbose, reader=reader)
     def __str__(self):
         string = "\nname:\t\t{!s},\n".format(self.name)
         string += "measure_type:\t{!s}\n".format(self.measure_type)
@@ -73,11 +73,11 @@ class Spectrum(numpy.lib.mixins.NDArrayOperatorsMixin):
         return string
     ##################################################
     # reader
-    def read(self, filepath, measure_type, verbose=False):
+    def read(self, filepath, measure_type, verbose=False, reader=None):
         '''
         Read measurement from a file.
         '''
-        data, meta = read(filepath, verbose=verbose)
+        data, meta = read(filepath, verbose=verbose, reader=reader)
         self.metadata = meta
         if measure_type == 'pct_reflect' and 'pct_reflect' not in data:
             self.measurement = self.get_pct_reflect(data)
