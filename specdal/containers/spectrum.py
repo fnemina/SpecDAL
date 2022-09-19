@@ -11,6 +11,7 @@ import os
 from numbers import Number
 import numpy.lib.mixins
 import xarray
+import copy
 
 logging.basicConfig(level=logging.WARNING,
         format="%(levelname)s:%(name)s:%(message)s\n")
@@ -74,6 +75,24 @@ class Spectrum(numpy.lib.mixins.NDArrayOperatorsMixin):
                 string += "\t"
             string += "\t{}:{}\n".format(key, item)
         return string
+    ##################################################
+    # Subsetter class to subset a spectrum
+    class Subsetter:
+        def __init__(self, spectrum, locator):
+            self.spectrum = spectrum
+            self.locator = locator
+
+        def __getitem__(self, *vargs, **kwargs):
+            self.spectrum.measurement = self.locator.__getitem__(*vargs, **kwargs)
+
+            self.spectrum.metadata["wavelength_range"] = (np.min(self.spectrum.measurement.index),
+                                                np.max(self.spectrum.measurement.index))
+            return self.spectrum
+
+    @property
+    def loc(self):
+        return self.Subsetter(copy.deepcopy(self), self.measurement.loc)
+
     ##################################################
     # reader
     def read(self, filepath, measure_type, verbose=False, reader=None):
@@ -151,13 +170,6 @@ class Spectrum(numpy.lib.mixins.NDArrayOperatorsMixin):
         self.savgol_polyorder = polyorder
 
     ##################################################
-    # wrapper for spectral subset
-    def walevength_range(self, wlmin=350, wlmax=2500, dtype=None):
-        self.measurement = self.measurement.loc[wlmin:wlmax]
-        self.metadata['wavelength_range'] = (wlmin, wlmax)
-
-
-    ##################################################
     # method for computing the values for a specific satellite
 
     def getRSR(self, satellite="aqua", sensor="modis", rsr_path=__file__.replace("/containers/spectrum.py","/rsr/")):
@@ -214,8 +226,6 @@ class Spectrum(numpy.lib.mixins.NDArrayOperatorsMixin):
         ''''''
         return pd.DataFrame(self.measurement).transpose().to_csv(
             *args, **kwargs)
-    ##################################################
-    # wrapper around pandas series operators
 
     ##################################################
     # wrapper for numpy functions
