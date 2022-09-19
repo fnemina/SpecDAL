@@ -329,6 +329,7 @@ unpredictable behavior."""
 	'''
         for spectrum in self.spectra:
             spectrum.jump_correct(splices, reference, method)
+
     def savgol_filter(self, window_length, polyorder, deriv=0,
                     delta=1.0, axis=-1, mode='interp', cval=0.0):
         self.metadata["savgol_window_length"] = window_length
@@ -338,6 +339,13 @@ unpredictable behavior."""
         for spectra_tmp in self.spectra:
             spectra_tmp.savgol_filter(window_length, 
                             polyorder, deriv, delta, axis, mode, cval)
+
+    def derivative(self):
+        '''
+        '''
+        for spectrum in self.spectra:
+            spectrum.derivative()
+            
 
     ##################################################
     # group operations

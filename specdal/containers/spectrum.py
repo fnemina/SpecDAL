@@ -42,6 +42,7 @@ class Spectrum(numpy.lib.mixins.NDArrayOperatorsMixin):
     def __init__(self, name=None, filepath=None, measurement=None,
                  measure_type='pct_reflect', metadata=None,
                  interpolated=False, stitched=False, jump_corrected=False,
+                 derivative_order=0,
                  verbose=False, reader=None):
         if name is None:
             assert filepath is not None
@@ -53,6 +54,7 @@ class Spectrum(numpy.lib.mixins.NDArrayOperatorsMixin):
         self.interpolated = interpolated
         self.stitched = stitched
         self.jump_corrected = jump_corrected
+        self.derivative_order = derivative_order
         if filepath:
             self.read(filepath, measure_type, verbose=verbose, reader=reader)
     def __str__(self):
@@ -131,6 +133,12 @@ class Spectrum(numpy.lib.mixins.NDArrayOperatorsMixin):
         else:
             logging.warning("Dataframe lacks columns to compute pct_reflect.")
         return pct_reflect
+
+    def derivative(self):
+        '''
+        '''
+        self.measurement = op.derivative(self.measurement)
+        self.derivative_order += 1
 
     def savgol_filter(self, window_length, polyorder, deriv=0,
                         delta=1.0, axis=-1, mode='interp', cval=0.0):
