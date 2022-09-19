@@ -3,6 +3,7 @@
 # pandas.DataFrame.
 import pandas as pd
 import numpy as np
+from numbers import Number
 from collections import OrderedDict, defaultdict
 from .spectrum import Spectrum
 import specdal.operators as op
@@ -321,11 +322,14 @@ unpredictable behavior."""
                 # We get the name of the spectra
                 name = spectra.name
                 # We get the subset
-                tmp = self.locator.__getitem__(*vargs, **kwargs)[name]
+                tmp = pd.Series(self.locator.__getitem__(*vargs, **kwargs)[name])
                 # We save it as spectra
                 spectra.measurement = tmp
-                spectra.metadata["wavelength_range"] = (np.min(tmp.index),
-                                    np.max(tmp.index))
+                if isinstance(tmp, Number): 
+                    spectra.metadata["wavelength_range"] = None
+                else:
+                    spectra.metadata["wavelength_range"] = (np.min(tmp.index),
+                                        np.max(tmp.index))
 
             return self.collection
 

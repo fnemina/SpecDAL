@@ -84,7 +84,7 @@ class Spectrum(numpy.lib.mixins.NDArrayOperatorsMixin):
 
         def __getitem__(self, *vargs, **kwargs):
             self.spectrum.measurement = self.locator.__getitem__(*vargs, **kwargs)
-
+            if isinstance(self.spectrum.measurement, Number): return self.spectrum.measurement
             self.spectrum.metadata["wavelength_range"] = (np.min(self.spectrum.measurement.index),
                                                 np.max(self.spectrum.measurement.index))
             return self.spectrum
