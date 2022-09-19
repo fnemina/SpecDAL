@@ -130,6 +130,16 @@ class Spectrum(numpy.lib.mixins.NDArrayOperatorsMixin):
         else:
             logging.warning("Dataframe lacks columns to compute pct_reflect.")
         return pct_reflect
+
+    def savgol_filter(self, window_length, polyorder, deriv=0,
+                        delta=1.0, axis=-1, mode='interp', cval=0.0):
+        '''
+        '''
+        self.measurement = op.savgol(self.measurement, 
+                        window_length, polyorder, deriv,
+                        delta, axis, mode, cval)
+        self.savgol_window = window_length
+        self.savgol_polyorder = polyorder
     ##################################################
     # wrapper around plot function
     def plot(self, *args, **kwargs):
