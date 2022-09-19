@@ -107,15 +107,16 @@ class Collection(object):
     """
     Represents a dataset consisting of a collection of spectra
     """
-    def __init__(self, name, directory=None, spectra=None,
-                 measure_type='pct_reflect', metadata=None, flags=None):
+    def __init__(self, name, directory=None, spectra=None, ext=[".asd", ".sed", ".sig",".pico",".light"],
+                 measure_type='pct_reflect', metadata=None, flags=None,
+                 reader=None):
         self.name = name
         self.spectra = spectra
         self.measure_type = measure_type
         self.metadata = metadata
         self.flags = flags
         if directory:
-            self.read(directory, measure_type)
+            self.read(directory, measure_type, ext=ext, reader=reader)
     @property
     def spectra(self):
         """
@@ -279,7 +280,7 @@ unpredictable behavior."""
     # reader
     def read(self, directory, measure_type='pct_reflect',
              ext=[".asd", ".sed", ".sig",".pico",".light"], recursive=False,
-             verbose=False):
+             verbose=False, reader=None):
         """
         read all files in a path matching extension
         """
@@ -298,7 +299,7 @@ unpredictable behavior."""
                 try:
                     spectrum = Spectrum(name=f_name, filepath=filepath,
                                         measure_type=measure_type,
-                                        verbose=verbose)
+                                        verbose=verbose, reader=reader)
                     self.append(spectrum)
                 except UnicodeDecodeError:
                     logging.warning("Input file {} contains non-unicode "

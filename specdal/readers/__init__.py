@@ -19,7 +19,7 @@ SUPPORTED_READERS = {
         '.dark':read_pico,
 }
 
-def read(filepath, read_data=True, read_metadata=True, verbose=False):
+def read(filepath, read_data=True, read_metadata=True, verbose=False, reader=None):
     """Calls a reader function based on the extension of the passed filename.
         .asd: read_asd
         .sig: read_sig
@@ -27,7 +27,12 @@ def read(filepath, read_data=True, read_metadata=True, verbose=False):
         .pico: read_pico
     """
     ext = splitext(filepath)[1]
-    assert ext in SUPPORTED_READERS
+    # We add the option to define a custom reader
+    if reader == None:
+        assert ext in SUPPORTED_READERS
+    else:
+        ext = reader 
+        assert ext in SUPPORTED_READERS
     reader = SUPPORTED_READERS[ext]
     return reader(abspath(expanduser(filepath)), read_data,
                   read_metadata, verbose)
