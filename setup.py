@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='specdal',
-      version='0.2.2',
+      version='0.2.4',
       description='Package for processing spectroscopy data',
       long_description=open('README.rst').read(),
       scripts=[
@@ -20,7 +20,7 @@ setup(name='specdal',
       packages=['specdal',  'specdal.gui','specdal.gui.pyqt',
           'specdal.readers','specdal.containers',
           'specdal.operators','specdal.filters'],
-      install_requires=['numpy', 'pandas', 'matplotlib', 'scipy','pyqt5'],
+      install_requires=['numpy', 'pandas', 'matplotlib', 'scipy','pyqt5', 'xarray'],
       package_data = {'':['specdal/gui/select.png'],
                       'specdal.gui.pyqt':['Assets/*.*'],
                       'rsr':['specdal/rsr/*.nc']},
