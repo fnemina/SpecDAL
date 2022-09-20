@@ -3,6 +3,7 @@
 # pandas.DataFrame.
 import pandas as pd
 import numpy as np
+from numbers import Number
 from collections import OrderedDict, defaultdict
 from .spectrum import Spectrum
 import specdal.operators as op
@@ -308,6 +309,34 @@ unpredictable behavior."""
                 except KeyError:
                     logging.warning("Input file {} missing metadata key. "
                                     "Please inspect input file.".format(f_name))
+
+    ##################################################
+    # Subsetter class to subset a collection
+    class Subsetter:
+        def __init__(self, collection, locator):
+            self.collection = collection
+            self.locator = locator
+
+        def __getitem__(self, *vargs, **kwargs):
+            for spectra in self.collection.spectra:
+                # We get the name of the spectra
+                name = spectra.name
+                # We get the subset
+                tmp = pd.Series(self.locator.__getitem__(*vargs, **kwargs)[name])
+                # We save it as spectra
+                spectra.measurement = tmp
+                if isinstance(tmp, Number): 
+                    spectra.metadata["wavelength_range"] = None
+                else:
+                    spectra.metadata["wavelength_range"] = (np.min(tmp.index),
+                                        np.max(tmp.index))
+
+            return self.collection
+
+    @property
+    def loc(self):
+        return self.Subsetter(copy.deepcopy(self), self.data.loc)
+
     ##################################################
     # wrapper around spectral operations
     def interpolate(self, spacing=1, method='slinear'):
@@ -346,14 +375,6 @@ unpredictable behavior."""
         for spectrum in self.spectra:
             spectrum.derivative()
             
-    ##################################################
-    # wrapper for spectral subset
-    def walevength_range(self, wlmin=350, wlmax=2500, dtype=None):
-        # We iterate over all spectra 
-        for spectra_tmp in self.spectra:
-            spectra_tmp.measurement = spectra_tmp.measurement.loc[wlmin:wlmax]
-            spectra_tmp.metadata['wavelength_range'] = (wlmin, wlmax)
-
 
     ##################################################
     # group operations
@@ -445,6 +466,11 @@ unpredictable behavior."""
         if append:
             self.append(spectrum)
         return spectrum
+
+    ##################################################
+    # duplicate collection
+    def copy(self):
+        return copy.deepcopy(self)
 
     ##################################################
     # method for computing the values for a specific satellite
