@@ -259,6 +259,11 @@ class Spectrum(numpy.lib.mixins.NDArrayOperatorsMixin):
             return NotImplemented
 
     ##################################################
+    # duplicate spectrum
+    def copy(self):
+        return copy.deepcopy(self)
+
+    ##################################################
     # wrapper for array operations
     def __array__(self, dtype=None):
         return self.measurement.values

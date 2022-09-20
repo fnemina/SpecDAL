@@ -468,6 +468,11 @@ unpredictable behavior."""
         return spectrum
 
     ##################################################
+    # duplicate collection
+    def copy(self):
+        return copy.deepcopy(self)
+
+    ##################################################
     # method for computing the values for a specific satellite
 
     def getSatellite(self, satellite="Aqua", sensor="MODIS", rsr_path = __file__.replace("/containers/collection.py","/rsr/")):
