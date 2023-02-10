@@ -475,7 +475,7 @@ unpredictable behavior."""
     ##################################################
     # method for computing the values for a specific satellite
 
-    def getSatellite(self, satellite="Aqua", sensor="MODIS", rsr_path = __file__.replace("/containers/collection.py","/rsr/")):
+    def getSatellite(self, satellite="Aqua", sensor="MODIS", rsr_path = __file__.replace("/containers/collection.py","/rsr/"),rsr=None):
         c_tmp = Collection(name=self.name, metadata={})
         c_tmp.metadata["satellite"] = satellite
         c_tmp.metadata["sensor"] = sensor
@@ -486,7 +486,7 @@ unpredictable behavior."""
         for spectra_tmp in self.spectra:
             # we print current spectra
             print(f"Spectra {i}/{size_compute}.", end="\r")
-            c_tmp.append(spectra_tmp.getSatellite(satellite, sensor, rsr_path))
+            c_tmp.append(spectra_tmp.getSatellite(satellite, sensor, rsr_path,rsr))
             i+=1
 
         return c_tmp

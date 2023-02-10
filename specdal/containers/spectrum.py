@@ -203,9 +203,10 @@ class Spectrum(numpy.lib.mixins.NDArrayOperatorsMixin):
         
         return rsr
 
-    def getSatellite(self, satellite="aqua", sensor="modis", rsr_path = __file__.replace("/containers/spectrum.py","/rsr/")):
-        # get relative spectral response
-        rsr = self.getRSR(satellite, sensor, rsr_path)
+    def getSatellite(self, satellite="aqua", sensor="modis", rsr_path = __file__.replace("/containers/spectrum.py","/rsr/"), rsr=None):
+        if type(rsr) == type(None):
+            # get relative spectral response
+            rsr = self.getRSR(satellite, sensor, rsr_path)
         # compute reflectance by band
         ref = rsr.mul(self.measurement, axis='index').sum(axis="index")/rsr.sum(axis="index")
         # save to spectrum
