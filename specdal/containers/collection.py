@@ -46,6 +46,10 @@ def df_to_collection(df, name, measure_type='pct_reflect'):
     c: specdal.Collection object
     
     '''
+    # Sanitize as numeric:
+    df = df.astype("float")
+    df.columns = df.columns.astype("float")
+    
     c = Collection(name=name, measure_type=measure_type)
     wave_cols, meta_cols = op.get_column_types(df)
     metadata_dict = defaultdict(lambda: None)
