@@ -368,6 +368,23 @@ unpredictable behavior."""
         for spectra_tmp in self.spectra:
             spectra_tmp.savgol_filter(window_length, 
                             polyorder, deriv, delta, axis, mode, cval)
+            
+    def normalize(self, wave="max", interpolate="False", maximum=1.0, value_norm=None):
+        '''
+        This methods normalizes an spectra an returns a new spectra
+        '''
+        c_tmp = Collection(name=self.name, metadata=self.metadata)
+
+        if c_tmp.metadata is None:
+            c_tmp.metadata = {"normalized":True}
+
+        # We iterate over all spectra 
+        for spectra_tmp in self.spectra:
+            norm_tmp = spectra_tmp.normalize(wave, interpolate, 
+                                             maximum, value_norm)
+            c_tmp.append(norm_tmp)
+
+        return c_tmp
 
     def derivative(self):
         '''

@@ -169,6 +169,25 @@ class Spectrum(numpy.lib.mixins.NDArrayOperatorsMixin):
         self.savgol_window = window_length
         self.savgol_polyorder = polyorder
 
+    def normalize(self, wave="max", interpolate="False", maximum=1.0, value_norm=None):
+        '''
+        This methods normalizes an spectra an returns a new spectra
+        '''
+
+        normalized = copy.deepcopy(self)
+        if normalized.metadata is None:
+            normalized.metadata = {}
+
+        normalized.measurement, maximum, wave = op.normalize(self.measurement, 
+                                  maximum=maximum, wave=wave, value_norm=value_norm,
+                                  interpolate=interpolate)
+        
+        normalized.metadata["normalized"] = True
+        normalized.metadata["normalize_value"] = value_norm
+        normalized.metadata["normalize_wave"] = wave
+        
+        return normalized
+
     ##################################################
     # method for computing the values for a specific satellite
 

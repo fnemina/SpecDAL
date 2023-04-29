@@ -9,4 +9,5 @@ from .stitch import stitch
 from .jump_correct import jump_correct
 from .derivative import derivative
 from .savgol_filter import savgol
+from .normalize import normalize
 
